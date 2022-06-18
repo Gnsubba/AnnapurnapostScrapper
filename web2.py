@@ -16,9 +16,15 @@ url = 'https://bg.annapurnapost.com/api/search?title='+search_keyword
 # print(url)
 for i in range(3):
     if i == 0:
-        r = requests.get(url)
+        try:
+            r = requests.get(url)
+        except:
+            continue
     else:
-        r = requests.get(url+"&page="+str(i+1))
+        try:
+            r = requests.get(url+"&page="+str(i+1))
+        except:
+            continue
     json_data =r.json()
 
     data = json_data['data']
