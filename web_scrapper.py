@@ -5,7 +5,9 @@ import json
 
 
 
-search_keyword = 'निर्देशन'
+search_keyword = 'राजनीति'
+
+
 
 url = 'https://bg.annapurnapost.com/api/search?title='+search_keyword
 
