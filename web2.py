@@ -1,63 +1,55 @@
 
 from itertools import count
-from json import dumps, loads
-from xmlrpc.client import boolean
+from json import dumps, loads,dump
 import requests
-import json
+
+# For tracking page number
+page_number = 0
+
+def Scrapper():
+    search_keyword = 'राजनीति'
+
+    url = 'https://bg.annapurnapost.com/api/search?title='+search_keyword
+
+    
+    # To open the file and check if previously request was sent or not and to retrive page number
+    with open('/Users/mac/Documents/web-scraping/AnnapurnapostWebScrapper/data.txt', 'r') as f:
+        page_numbers = f.readline()
+        if page_numbers == '' or page_numbers == '0':
+            page_number = 0
+        else:
+            print(page_numbers)
+            page_number = int(page_numbers)
 
 
-
-search_keyword = 'राजनीति'
-
-
-
-url = 'https://bg.annapurnapost.com/api/search?title='+search_keyword
-
-pagination = []
-
-with open('/Users/mac/Documents/web-scraping/AnnapurnapostWebScrapper/data.txt', 'r') as f:
-    if f.readline() == '':
-        print("empty file")
-    else:
-        pagination.append(True)
-        for i in range(2):
-            pagination.append(eval(f.readline()))
-
-print(pagination)
-if pagination.__len__() == 0:
+    # print(url)
     for i in range(3):
-        pagination.append(False)
+        if page_number >= i+1:
+            break
+        if i == 0:
+            try:
+                r = requests.get(url)
+            except:
+                continue
+        else:
+            try:
+                r = requests.get(url+"&page="+str(i+1))
+            except:
+                continue
+        json_data =r.json()
 
-print(pagination)
-# print(url)
-for i in range(3):
-    if pagination[i] == True:
-        continue
-    if i == 0:
-        try:
-            r = requests.get(url)
-        except:
-            continue
-    else:
-        try:
-            r = requests.get(url+"&page="+str(i+1))
-        except:
-            continue
-    json_data =r.json()
-
-    data = json_data['data']
+        data = json_data['data']
 
 
-    items = (data.get('items'))
+        items = (data.get('items'))
 
-    news = {"page"+str(i+1)+"news" + str(j+1): items[j] for j in range(len(items))}
+        # To store the news in news.txt
+        dump(items, open('news.txt', 'w'))
 
-    print(news)
-    pagination[i] = True
+        page_number = page_number + 1
+        print(page_number)
 
-    # print(news_json)
+    with open('/Users/mac/Documents/web-scraping/AnnapurnapostWebScrapper/data.txt', 'w') as f:
+            f.write(str(page_number))
 
-print(pagination)
-with open('/Users/mac/Documents/web-scraping/AnnapurnapostWebScrapper/data.txt', 'w') as f:
-    for i in range(pagination.__len__()):
-        f.write(str(pagination[i]) + '\n')
+Scrapper()
