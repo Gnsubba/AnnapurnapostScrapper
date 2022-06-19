@@ -24,6 +24,7 @@ def Scrapper():
 
     # print(url)
     for i in range(3):
+        # This is the condition which checks whether the page is already requested and the response was succesful
         if page_number >= i+1:
             break
         if i == 0:
