@@ -26,17 +26,17 @@ def Scrapper():
     for i in range(3):
         # This is the condition which checks whether the page is already requested and the response was succesful
         if page_number >= i+1:
-            break
+            continue
         if i == 0:
             try:
                 r = requests.get(url)
             except:
-                continue
+                break
         else:
             try:
                 r = requests.get(url+"&page="+str(i+1))
             except:
-                continue
+                break
         json_data =r.json()
 
         data = json_data['data']
