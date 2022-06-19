@@ -27,6 +27,7 @@ def Scrapper():
         # This is the condition which checks whether the page is already requested and the response was succesful
         if page_number >= i+1:
             continue
+        print('Requesting page with URL: '+url+"&page="+str(i+1))
         if i == 0:
             try:
                 r = requests.get(url)
@@ -48,7 +49,7 @@ def Scrapper():
         dump(items, open('news.txt', 'w'))
 
         page_number = page_number + 1
-        print(page_number)
+        
 
     with open('/Users/mac/Documents/web-scraping/AnnapurnapostWebScrapper/data.txt', 'w') as f:
             f.write(str(page_number))
